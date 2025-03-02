@@ -1,0 +1,495 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "OpenAPI definition",
+        "version": "v0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:9999/api-whatsapp",
+            "description": "Generated server url"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Message",
+            "description": "Message API"
+        },
+        {
+            "name": "Chat",
+            "description": "Chat operations"
+        },
+        {
+            "name": "User",
+            "description": "User operations"
+        }
+    ],
+    "paths": {
+        "/v1.0/chats": {
+            "get": {
+                "tags": [
+                    "Chat"
+                ],
+                "operationId": "getChatsByReceiverId",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralResponseListChatInformationResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Chat"
+                ],
+                "operationId": "createChat",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ChatCreationRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralResponseChatCreatedResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1.0/message": {
+            "post": {
+                "tags": [
+                    "Message"
+                ],
+                "operationId": "createMessage",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MessageCreationRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralResponseString"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1.0/message/files": {
+            "post": {
+                "tags": [
+                    "Message"
+                ],
+                "operationId": "createMessageWithFile",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MediaMessageRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralResponseString"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1.0/message/seen": {
+            "patch": {
+                "tags": [
+                    "Message"
+                ],
+                "operationId": "setMessagesToSeen",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ChatStatusRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralResponseString"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1.0/users/contacts": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "operationId": "getContacts",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralResponseListUserInformationResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1.0/message/chat/{chatId}": {
+            "get": {
+                "tags": [
+                    "Message"
+                ],
+                "operationId": "getAllMessages",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GeneralResponseListMessageInformationResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ChatCreationRequest": {
+                "required": [
+                    "recipientId",
+                    "senderId"
+                ],
+                "type": "object",
+                "properties": {
+                    "senderId": {
+                        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+                        "type": "string"
+                    },
+                    "recipientId": {
+                        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+                        "type": "string"
+                    }
+                }
+            },
+            "ChatCreatedResponse": {
+                "type": "object",
+                "properties": {
+                    "chatName": {
+                        "type": "string"
+                    }
+                }
+            },
+            "GeneralResponseChatCreatedResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/ChatCreatedResponse"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "MessageCreationRequest": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "type": "string"
+                    },
+                    "senderId": {
+                        "type": "string"
+                    },
+                    "receiverId": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "TEXT",
+                            "IMAGE",
+                            "AUDIO",
+                            "VIDEO"
+                        ]
+                    },
+                    "chatId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "GeneralResponseString": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "MediaMessageRequest": {
+                "type": "object",
+                "properties": {
+                    "chatId": {
+                        "type": "string"
+                    },
+                    "file": {
+                        "type": "string"
+                    },
+                    "content": {
+                        "type": "string"
+                    },
+                    "nameFile": {
+                        "type": "string"
+                    },
+                    "senderId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ChatStatusRequest": {
+                "required": [
+                    "idChat",
+                    "idUser"
+                ],
+                "type": "object",
+                "properties": {
+                    "idUser": {
+                        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+                        "type": "string"
+                    },
+                    "idChat": {
+                        "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$",
+                        "type": "string"
+                    }
+                }
+            },
+            "ChatInformationResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "unreadCount": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "lastMessage": {
+                        "type": "string"
+                    },
+                    "lastMessageTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "senderId": {
+                        "type": "string"
+                    },
+                    "receiverId": {
+                        "type": "string"
+                    },
+                    "recipientOnline": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "GeneralResponseListChatInformationResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ChatInformationResponse"
+                        }
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "GeneralResponseListUserInformationResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UserInformationResponse"
+                        }
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "UserInformationResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "lastSeen": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "online": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "GeneralResponseListMessageInformationResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MessageInformationResponse"
+                        }
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "MessageInformationResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "content": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "TEXT",
+                            "IMAGE",
+                            "AUDIO",
+                            "VIDEO"
+                        ]
+                    },
+                    "state": {
+                        "type": "string",
+                        "enum": [
+                            "SENT",
+                            "SEEN"
+                        ]
+                    },
+                    "senderId": {
+                        "type": "string"
+                    },
+                    "receiverId": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "mediaFilePath": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "keycloak": {
+                "type": "oauth2",
+                "in": "header",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "flows": {
+                    "password": {
+                        "authorizationUrl": "http://localhost:8080/realms/whatsapp-clone/protocol/openid-connect/auth",
+                        "tokenUrl": "http://localhost:8080/realms/whatsapp-clone/protocol/openid-connect/token",
+                        "scopes": {}
+                    }
+                }
+            }
+        }
+    }
+}
